@@ -11267,13 +11267,23 @@ elif page == "経営ダッシュボード":
         <script>
         (function() {{
             const target = {json.dumps(active_tab, ensure_ascii=False)};
-            const doc = window.parent.document;
+            const parentWindow = window.parent || window;
+            const doc = parentWindow.document || document;
             function activate(attempt) {{
                 const tabs = doc.querySelectorAll('button[role="tab"]');
                 for (const tab of tabs) {{
                     if (tab.textContent.trim() === target) {{
-                        tab.click();
-                        tab.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                        if (tab.getAttribute('aria-selected') !== 'true') {{
+                            tab.click();
+                        }}
+                        const scrollTop =
+                            (typeof parentWindow.scrollY === 'number' ? parentWindow.scrollY : null) ??
+                            (doc.documentElement && typeof doc.documentElement.scrollTop === 'number' ? doc.documentElement.scrollTop : null) ??
+                            (doc.body && typeof doc.body.scrollTop === 'number' ? doc.body.scrollTop : null) ??
+                            0;
+                        if (scrollTop < 100) {{
+                            tab.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                        }}
                         return;
                     }}
                 }}
