@@ -4748,12 +4748,8 @@ def apply_tour_highlight(step: Optional[Dict[str, str]]) -> None:
     const doc = window.parent.document;
     const run = () => {{
         const root = doc.documentElement;
-        if (!root) return;
-        const previousKey = root.getAttribute('data-tour-key') || '';
-        const nextKey = STEP.key || '';
-        const highlightChanged = nextKey && nextKey !== previousKey;
-        if (nextKey) {{
-            root.setAttribute('data-tour-key', nextKey);
+        if (STEP.key) {{
+            root.setAttribute('data-tour-key', STEP.key);
         }} else {{
             root.removeAttribute('data-tour-key');
         }}
@@ -4786,9 +4782,7 @@ def apply_tour_highlight(step: Optional[Dict[str, str]]) -> None:
                 const container = targetHeading.closest('.mck-section-header') || targetHeading.parentElement;
                 if (container) {{
                     container.classList.add('tour-highlight-heading');
-                    if (highlightChanged) {{
-                        container.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
-                    }}
+                    container.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
                 }}
             }}
         }}
